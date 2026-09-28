@@ -1,0 +1,29 @@
+{
+  "name": "pi-ask-user-question",
+  "version": "1.0.0",
+  "description": "Claude Code-style interactive questioning for pi, with a hard 3-minute timeout and sync/async modes",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "pi",
+    "pi-package",
+    "ask",
+    "user",
+    "question"
+  ],
+  "main": "./ask-user-question.ts",
+  "pi": {
+    "extensions": [
+      "./ask-user-question.ts"
+    ]
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-agent-core": "*",
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-tui": "*"
+  }
+}
