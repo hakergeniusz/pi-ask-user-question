@@ -128,34 +128,31 @@ let nextQuestionId = 1;
 
 const OptionSchema = Type.Object({
 	label: Type.String({
-		description:
-			"Display text for this option (concise, 1-5 words). Must be unique within the question.",
+		description: "Display text (1-5 words), unique within the question.",
 	}),
 	description: Type.String({
-		description: "What this option means / what happens if chosen. Trade-offs, implications.",
+		description: "What this option means; trade-offs or implications.",
 	}),
 	preview: Type.Optional(
 		Type.String({
-			description:
-				"Optional preview (code snippet, mockup, config example) shown when the option is focused. Single-select only.",
+			description: "Optional code/mockup/config shown when the option is focused. Single-select only.",
 		}),
 	),
 });
 
 const QuestionSchema = Type.Object({
 	question: Type.String({
-		description:
-			'Complete question ending with "?". If multiSelect is true, phrase accordingly, e.g. "Which features do you want to enable?" Must be unique across questions.',
+		description: 'Complete question ending with "?". Unique across questions.',
 	}),
 	header: Type.String({
-		description: 'Very short chip label for the tab bar, max 12 chars. E.g. "Auth", "Library", "Approach".',
+		description: 'Short tab label, max 12 chars. E.g. "Auth".',
 	}),
 	options: Type.Array(OptionSchema, {
-		description: "2-4 distinct, mutually exclusive choices (unless multiSelect). Do NOT add an Other option; one is provided automatically.",
+		description: "2-4 distinct, mutually exclusive choices (unless multiSelect).",
 	}),
 	multiSelect: Type.Optional(
 		Type.Boolean({
-			description: "Allow selecting multiple options. Use when choices are not mutually exclusive. Default false.",
+			description: "Allow selecting several options. Default false.",
 		}),
 	),
 });
@@ -166,10 +163,9 @@ const AskParams = Type.Object({
 		Type.Union([Type.Literal("sync"), Type.Literal("async")], {
 			default: "sync",
 			description:
-				"sync (default): block this turn until the user answers, declines, or the timeout fires. " +
-				"async: return immediately and keep working; the answer is delivered back to you as a message " +
-				"when the user replies, presses Esc, or the question times out. Use async only when you can " +
-				"make progress without the answer.",
+				"sync (default) blocks the turn until answered or declined. " +
+				"async returns immediately and delivers the answer as a message later. " +
+				"Use async only if you can make progress without the answer.",
 		}),
 	),
 });
@@ -251,16 +247,12 @@ export default function askUserQuestion(pi: ExtensionAPI) {
 		name: "AskUserQuestion",
 		label: "AskUserQuestion",
 		description: [
-			"Asks the user multiple-choice questions to gather info, clarify ambiguity, understand preferences, or offer direction choices.",
-			"Use when you need user input to proceed: requirements, implementation choices, decisions.",
-			"Notes:",
-			'- 1-4 questions per call; 2-4 options per question. An "Other" free-text option is added automatically — never add your own.',
-			'- header is a very short (max 12 chars) tab label like "Auth" or "Library".',
-			'- If you recommend an option, put it first and append "(Recommended)" to its label.',
-			"- multiSelect:true allows several answers; phrase the question accordingly.",
-			"- In plan mode use this to clarify requirements BEFORE finalizing, never to ask for plan approval.",
-			`- Times out after ${ASK_TIMEOUT_MINUTES} minutes with no reply; the tool then returns "${TIMEOUT_MESSAGE}"`,
-			'- mode:"sync" (default) blocks the turn until answered. mode:"async" returns immediately and keeps the question open; the answer (or decline/timeout) is delivered back to you as a message later, so keep working meanwhile and never re-ask.',
+			"Asks the user 1-4 multiple-choice questions (2-4 options each) to gather info, clarify ambiguity, or decide between options.",
+			'An "Other" free-text option is appended automatically — never add your own.',
+			'If you recommend an option, put it first with "(Recommended)" in its label.',
+			'- mode "sync" (default) blocks the turn until answered; "async" returns at once and delivers the reply as a message later — keep working, never re-ask.',
+			"- In plan mode, clarify requirements before finalizing, never ask for plan approval.",
+			`- Times out after ${ASK_TIMEOUT_MINUTES} minutes with no reply; do not retry.`,
 		].join("\n"),
 		parameters: AskParams,
 		executionMode: "sequential",

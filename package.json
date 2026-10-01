@@ -1,6 +1,6 @@
 {
   "name": "pi-ask-user-question",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Claude Code-style interactive questioning for pi, with a hard 3-minute timeout and sync/async modes",
   "type": "module",
   "license": "MIT",
