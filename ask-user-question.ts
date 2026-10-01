@@ -246,6 +246,9 @@ export default function askUserQuestion(pi: ExtensionAPI) {
 	pi.registerTool({
 		name: "AskUserQuestion",
 		label: "AskUserQuestion",
+		// Deferred: 433 tok of declarations on every request; tool_search
+		// finds and activates it when the agent actually needs to ask.
+		exposure: "deferred",
 		description: [
 			"Asks the user 1-4 multiple-choice questions (2-4 options each) to gather info, clarify ambiguity, or decide between options.",
 			'An "Other" free-text option is appended automatically — never add your own.',
